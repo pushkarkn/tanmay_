@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Happy Birthday Tanmay! 🎉</title>
+    <!-- Load Canvas-Confetti library for real party animations -->
+    <script src='https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js'></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle, #290a59 0%, #080112 100%);
+            font-family: 'Arial Black', Gadget, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        /* Welcome Gate Button */
+        #envelope-gate {
+            text-align: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .open-btn {
+            background: linear-gradient(45deg, #ff4081, #00e5ff);
+            color: #fff;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.8);
+            animation: pulse 1.5s infinite alternate;
+            transition: transform 0.2s;
+        }
+
+        .open-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Birthday Celebration Overlay */
+        #bday-celebration {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .bday-title {
+            font-size: 4.5em;
+            margin: 0;
+            text-shadow: 0 0 10px #ff4081, 0 0 20px #ff4081, 0 0 40px #ff4081;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        .name-title {
+            font-size: 3.5em;
+            margin: 20px 0;
+            color: #00e5ff;
+            text-shadow: 0 0 15px #00e5ff;
+            letter-spacing: 2px;
+        }
+
+        .sub-text {
+            font-size: 1.8em;
+            font-weight: normal;
+            font-family: sans-serif;
+            opacity: 0.9;
+            color: #fff;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Step 1: User interaction required to play audio on modern browsers -->
+    <div id='envelope-gate'>
+        <h1 style='font-size: 2.5em; margin-bottom: 30px;'>🎁 You Received a Birthday Surprise!</h1>
+        <button class='open-btn' onclick='startCelebration()'>OPEN SURPRISE</button>
+    </div>
+
+    <!-- Step 2: The actual presentation screen -->
+    <div id='bday-celebration'>
+        <h1 class='bday-title'>🎉 HAPPY BIRTHDAY! 🎉</h1>
+        <h2 class='name-title'>✨ Tanmay ✨</h2>
+        <p class='sub-text'>⚡ ORA ORA ORA ORA! ⚡</p>
+    </div>
+
+    <!-- Background Audio Tracks -->
+    <audio id='bday-speech' src='msg.mp3'></audio>
+    <audio id='jojo-theme' src='ora_ora.mp3'></audio>
+
+    <script>
+        function startCelebration() {
+            // Hide the entry gate
+            document.getElementById('envelope-gate').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('envelope-gate').style.display = 'none';
+                
+                // Show presentation content
+                const content = document.getElementById('bday-celebration');
+                content.style.display = 'flex';
+                setTimeout(() => { content.style.opacity = '1'; }, 50);
+            }, 500);
+
+            // Start visual confetti party
+            triggerConfetti();
+
+            // Play birthday speech first
+            const speechAudio = document.getElementById('bday-speech');
+            const jojoAudio = document.getElementById('jojo-theme');
+            
+            speechAudio.play().then(() => {
+                // When speech finishes, play JoJo theme!
+                speechAudio.onended = function() {
+                    jojoAudio.play();
+                };
+            }).catch(err => {
+                console.log("Audio autoplay failed, browser blocked sound:", err);
+                // Fallback: Play Jojo immediately
+                jojoAudio.play();
+            });
+        }
+
+        function triggerConfetti() {
+            var duration = 15 * 1000; // Confetti for 15 seconds
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              // Confetti shooting from random coordinates
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
